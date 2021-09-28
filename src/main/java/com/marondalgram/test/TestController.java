@@ -16,16 +16,22 @@ public class TestController {
 	@Autowired
 	private TestBO testBO;
 	
-	@RequestMapping("/test3")
+	@RequestMapping("/test2_1")
 	@ResponseBody
 	public String test1() {
 		return "hello world!!!!!!!!!!!!!!";
 	}
 	
-	@RequestMapping("/test4")
+	@RequestMapping("/test2_2")
 	@ResponseBody
 	public List<Map<String, Object>> test2() {
 		return testBO.getUserList();
+	}
+	
+	//JSP 연동
+	@RequestMapping("/test2_3")
+	public String test3() {
+		return "test/test";
 	}
 	
 }
