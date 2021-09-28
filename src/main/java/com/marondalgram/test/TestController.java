@@ -34,4 +34,9 @@ public class TestController {
 		return "test/test";
 	}
 	
+	@RequestMapping("/test2_4")
+	public String test4() {
+		return "template/layout";
+	}
+	
 }
