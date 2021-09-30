@@ -40,7 +40,7 @@ public class UserController {
 	public String signOutView(HttpServletRequest request) {
 		//session을 가져와서 로그아웃 
 		HttpSession session = request.getSession();
-		session.removeAttribute("userID");
+		session.removeAttribute("userId");
 		session.removeAttribute("userName");
 		session.removeAttribute("userLoginId");
 		
