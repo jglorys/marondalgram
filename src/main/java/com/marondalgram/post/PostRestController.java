@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,19 +46,38 @@ public class PostRestController {
 		Map<String, Object> result = new HashMap<>();
 		result.put("result", "error");
 		
+		// session 풀렸을 때
 		if (userId == null) {
 			logger.info("[/post/create] userId id null. " + userId);
 			//return "redirect:/user/sign_in_view";
 			return result;
 		}
 		
-		// DB에 내용 inssert BO한테 시킴
+		// DB에 내용 insert BO한테 시킴
 		int row = postBO.createPost(userId, userLoginId, userName, content, file);
 		if (row > 0) {
 			result.put("result", "success");
+		} else {
+			// row = 0  =>  이미지 업로드 실패
+			logger.info("[/post/create] insert false. ");
+			return result;
 		}
 		
 		// 결과값 response
+		return result;
+	}
+	
+	@DeleteMapping("/delete")
+	public Map<String, Object> delete(
+			@RequestParam("postId") int postId
+			) {
+		// DB postId에 해당하는 데이터 삭제
+		postBO.deletePost(postId);
+		
+		// 결과 리턴
+		Map<String, Object> result = new HashMap<>();
+		result.put("result", "success");
+		
 		return result;
 	}
 }

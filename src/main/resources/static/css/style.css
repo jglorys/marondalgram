@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
-header {height:70px; background-color:#e9e9e9;}
-
+header {height:70px; background-color:rgb(211, 224, 254);}
+.logo {color: #000}
 
 .contents {height:800px;}
 .login-info {height:50px;}
@@ -10,5 +10,5 @@ header {height:70px; background-color:#e9e9e9;}
 
 
 
-#signUpForm {height:500px; width:500px; background-color:#F5F5F5;}
+#signUpForm {height:500px; width:500px; background-color:rgb(237, 252, 201);}
 

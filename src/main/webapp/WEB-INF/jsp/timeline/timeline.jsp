@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%-- JSTL Core태그 --%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%-- JSTL Formatting --%>
 
 
 <div class="d-flex justify-content-center">
@@ -36,41 +38,52 @@
 		<%-- my: margin 위아래(y축) --%>
 		<div class="timeline-box my-5">
 		<%-- forEach로 하나씩 카드 만들자!!!! --%>
-		<c:forEach items="${postList}" var="post">
+		<c:forEach items="${contentList}" var="content">
 		
 			<%-- 카드 하나하나마다 영역을 border로 나눔 --%>
 			<div class="card border rounded mt-3 bg-light">
 
 				<%-- 글쓴이 아이디 및 ... 버튼(삭제) :  이 둘을 한 행에 멀리 떨어뜨려 나타내기 위해 d-flex, between --%>
 				<div class="p-2 d-flex justify-content-between">
-					<span class="font-weight-bold">${post.userName}</span>
+					<span class="font-weight-bold">${content.post.userName}</span>
 
 					<%-- 클릭할 수 있는 ... 버튼 이미지 --%>
-					<a href="#" class="more-btn"> <img
-						src="https://www.iconninja.com/files/860/824/939/more-icon.png"
-						width="30">
-					</a>
+					<%-- 로그인 된 사용자가 작성한 경우에만 버튼 노출 --%>
+					<%-- 삭제될 글번호를 modal창에 넣기 위해 더보기 클릭시 이벤트에서 심어준다 / 세션에 있는건 jsp에서 그냥 가져다쓰면됨!!!--%>
+					<c:if test="${userName eq content.post.userName}">
+						<%-- data-toggle  /  data-target만 있으면 된다! --%>
+						<a href="#" class="more-btn" data-toggle="modal" data-target="#moreModal" data-post-id="${content.post.id}"> 
+							<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
+						</a>
+					</c:if>
 				</div>
 		
 				<%-- 카드 이미지 --%>
 				<div class="card-img">
 					<img
-						src="${post.imagePath}"
+						src="${content.post.imagePath}"
 						class="w-100">
 				</div>
 
-				<%-- 좋아요 --%>
-				<div class="card-like m-3">
-					<a href="#"><img
-						src="https://www.iconninja.com/files/527/809/128/heart-icon.png"
-						width="18px" height="18px"></a> <a href="#">좋아요 11개</a>
+				<%-- 좋아요 & createdAt --%>
+				<div class="d-flex justify-content-between">
+					<div class="card-like m-3">
+						<a href="#"><img
+							src="https://www.iconninja.com/files/527/809/128/heart-icon.png"
+							width="18px" height="18px"></a> <a href="#">좋아요 11개</a>
+					</div>
+					<div class="card-createdAt m-3">
+						<fmt:formatDate value="${content.post.createdAt}" pattern="yyyy년MM월dd일 HH시mm분"/>
+					</div>
 				</div>
 
-				<%-- 글(Post) --%>
-				<div class="card-post m-3">
-					<span class="font-weight-bold">${post.userName}</span>
-					<span>${post.content}</span>
-				</div>
+				<%-- 글(Post) : 내용이 있을때에만 userName이랑 내용보이게 --%>
+				<c:if test="${not empty content.post.content}">
+					<div class="card-post m-3">
+						<span class="font-weight-bold">${content.post.userName}</span>
+						<span>${content.post.content}</span>
+					</div>
+				</c:if>
 				<%-- 댓글(Comment) --%>
 
 				<div class="card-comment-desc border-bottom">
@@ -78,36 +91,28 @@
 				</div>
 				<div class="card-comment-list m-2">
 					<%-- 댓글 목록 --%>
-					<div class="card-comment m-1">
-						<span class="font-weight-bold">sdfsdf : </span> <span> 분류가
-							잘 되었군요~</span>
-
-						<%-- TODO: 댓글쓴이가 본인이면 삭제버튼 노출 --%>
-						<a href="#" class="commentDelBtn"> <img
-							src="https://www.iconninja.com/files/603/22/506/x-icon.png"
-							width="10px" height="10px">
-						</a>
-					</div>
-
-					<div class="card-comment m-1">
-						<span class="font-weight-bold">coffee : </span> <span>
-							철이 없었죠 분류를 위해 클러스터를 썼다는게</span>
-
-						<%-- TODO: 댓글쓴이가 본인이면 삭제버튼 노출 --%>
-						<a href="#" class="commentDelBtn"> <img
-							src="https://www.iconninja.com/files/603/22/506/x-icon.png"
-							width="10px" height="10px">
-						</a>
-					</div>
+					<%-- content -> commentList  (for each) 돌려서 --%>
+					<c:forEach items="${content.commentList}" var="comment">
+						<div class="card-comment m-1">
+							<span class="font-weight-bold">${comment.userName} : </span>
+							<span>${comment.content}</span>
+	
+							<%-- 댓글쓴이가 본인이면 삭제버튼 노출 --%>
+							<c:if test="${userName eq comment.userName}">
+							<a href="#" class="commentDelBtn"> 
+								<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10px" height="10px">
+							</a>
+							</c:if>
+						</div>
+					</c:forEach>
 				</div>
 
 				<%-- 댓글 쓰기 --%>
 				<%-- 로그인 된 상태에서만 쓸 수 있다. --%>
 				<c:if test="${not empty userId}">
 					<div class="comment-write d-flex border-top mt-2">
-						<input type="text" id="commentText"
-							class="form-control border-0 mr-2" placeholder="댓글 달기" />
-						<button type="button" class="btn btn-light commentBtn">게시</button>
+						<input type="text" class="form-control border-0 mr-2"  id="commentText" placeholder="댓글 달기" />
+						<button type="button" class="btn btn-light commentBtn" data-post-id="${content.post.id}">게시</button>
 					</div>
 				</c:if>
 			</div>
@@ -115,6 +120,18 @@
 		</div>
 		
 	</div>
+</div>
+
+
+
+<!-- Modal(data-target과 id가 연결됨) -->
+<div class="modal fade" id="moreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    	<%-- 삭제하기 버튼눌렀을때 서버로 리퀘스트 --%>
+     	<a href="#" class="btn btn-warning del-post">삭제하기</a> 
+    </div>
+  </div>
 </div>
 
 
@@ -187,8 +204,66 @@ $(document).ready(function(){
 		});
 	});
 	
-	// 댓글 쓰기
+	// ... 버튼 클릭
+	$('.more-btn').on('click', function(e){
+		e.preventDefault();
+		// 모달이 띄워질때,
+		// 지금 클릭된 태그의 postId를 가져온다.  $('.more-btn').data 해서 가져오면, 첫번째 클래스에 있는 postId만 가져오게 됨!!!!
+		let postId = $(this).data('post-id');
+		//alert(postId);
+		
+		// 모달에 postId를 넣어준다. => 태그에 셋팅을 해준다
+		$('#moreModal').data('post-id', postId);
+		
+	});
 	
+	//모달안에 있는 삭제하기 클릭
+	$('#moreModal .del-post').on('click', function(e){
+		e.preventDefault();
+		
+		// #moreModel에 심어놓은 post-id
+		let postId = $('#moreModal').data('post-id');
+		//alert(postId);
+		
+		// 서버한테 글 삭제 요청(ajax)
+		$.ajax({
+			type : 'delete',
+			url : '/post/delete',
+			data : {'postId':postId},
+			success : function(data) {
+				if (data.result == 'success') {
+					// 삭제했으면 새로고침
+					alert("게시물이 삭제되었습니다.");
+					location.reload(); //새로고침
+				}
+			},
+			error : function(e) {
+				alert("게시물을 삭제하는데 실패했습니다." + e);
+				location.reload();
+			}
+		});
+		
+	});
+	
+	
+	// 댓글 쓰기 - 어떤 postId가 넘어오는지 알아야한다. 
+	$('.commentBtn').on('click', function(e) {
+		// 기본 동작 중단
+		e.preventDefault();
+		
+		let postId = $(this).data('post-id');
+		//alert(postId);
+		let commentText = $('#commentText').val();
+		if (commentText.length < 1) {
+			alert("댓글을 입력해주세요.");
+			return;
+		}
+		
+		//form 태그를 자바스크립트에서 만든다.
+		let formData = new FormData();
+		formData.append('comment', comment);
+		
+	});
 	
 	
 });

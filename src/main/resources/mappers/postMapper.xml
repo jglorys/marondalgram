@@ -39,7 +39,26 @@
 	
 	</insert>
  
+ 	<select id="selectPost" resultType="com.marondalgram.post.model.Post" parameterType="int">
+ 		SELECT
+ 			`id`
+ 			, `userId`
+			, `userName`
+			, `content`
+			, `imagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`post`
+		WHERE
+			`id` = #{id}
+ 	</select>
  
- 
- 
+ 	<delete id="deletePost" parameterType="int">
+ 		DELETE 
+		FROM 
+			`post`
+		WHERE
+			`id` = #{id}
+ 	</delete>
  </mapper>
