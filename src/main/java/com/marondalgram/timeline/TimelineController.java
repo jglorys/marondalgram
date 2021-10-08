@@ -40,7 +40,7 @@ public class TimelineController {
 		
 		// 모든 유저의 게시물들을 다 가져옴 -> parameter없음
 		// List<Post> postList = postBO.getPostList();  이거말고 List<ContentView>로 가져오자!!
-		List<ContentView> contentList = contentBO.generateContentViewList();
+		List<ContentView> contentList = contentBO.getContentViewList(userId);
 
 		model.addAttribute("contentList", contentList);
 		model.addAttribute("viewName", "timeline/timeline");

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.marondalgram.comment.bo.CommentBO;
 import com.marondalgram.comment.model.Comment;
-import com.marondalgram.post.bo.LikeBO;
+import com.marondalgram.like.bo.LikeBO;
 import com.marondalgram.post.bo.PostBO;
 import com.marondalgram.post.model.Post;
 import com.marondalgram.timeline.model.ContentView;
@@ -25,7 +25,7 @@ public class ContentBO {
 	@Autowired
 	private LikeBO likeBO;
 	
-	public List<ContentView> generateContentViewList(){
+	public List<ContentView> getContentViewList(int userId){
 		List<ContentView> contentViewList = new ArrayList<>();
 		
 		// Post목록
@@ -41,12 +41,13 @@ public class ContentBO {
 			content.setCommentList(commentList);
 			
 			//좋아요 - 내가 한 좋아요 여부
-			// 좋아요 -> userId, postId
-			//content.setLikeYn();
+			// 좋아요 -> userId, postId O-true / X-false
+			content.setLikeYn(likeBO.existLike(userId, post.getId()));
 			
 			//좋아요개수
 			//좋아요 -> postId
-			//content.setLikeCount(0);
+			content.setLikeCount(likeBO.getLikeCountByPostId(post.getId()));
+			
 			
 			contentViewList.add(content);
 		}

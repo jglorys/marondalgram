@@ -67,11 +67,24 @@
 
 				<%-- 좋아요 & createdAt --%>
 				<div class="d-flex justify-content-between">
+					<%-- 비워진 하트 --%>
+					<c:if test="${content.likeYn eq false}">
 					<div class="card-like m-3">
-						<a href="#"><img
-							src="https://www.iconninja.com/files/527/809/128/heart-icon.png"
-							width="18px" height="18px"></a> <a href="#">좋아요 11개</a>
+						<a href="#"  class="like-btn" data-post-id="${content.post.id}">
+							<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18px" height="18px"></a>
+							좋아요 <span>${content.likeCount}</span>
 					</div>
+					</c:if>
+					<%-- 채워진 하트 --%>
+					<c:if test="${content.likeYn eq true}">
+					<div class="card-like m-3">
+						<a href="#"  class="like-btn" data-post-id="${content.post.id}">
+							<img src="https://www.iconninja.com/files/527/809/128/heart-icon.png" width="18px" height="18px"></a>
+							좋아요 <span>${content.likeCount}</span>
+					</div>
+					</c:if>
+					
+					<%-- 작성 날짜 --%>
 					<div class="card-createdAt m-3">
 						<fmt:formatDate value="${content.post.createdAt}" pattern="yyyy년MM월dd일 HH시mm분"/>
 					</div>
@@ -111,7 +124,7 @@
 				<%-- 로그인 된 상태에서만 쓸 수 있다. --%>
 				<c:if test="${not empty userId}">
 					<div class="comment-write d-flex border-top mt-2">
-						<input type="text" class="form-control border-0 mr-2"  id="commentText" placeholder="댓글 달기" />
+						<input type="text" class="form-control border-0 mr-2"  id="commentText${content.post.id}" placeholder="댓글 달기" />
 						<button type="button" class="btn btn-light commentBtn" data-post-id="${content.post.id}">게시</button>
 					</div>
 				</c:if>
@@ -248,20 +261,44 @@ $(document).ready(function(){
 	
 	// 댓글 쓰기 - 어떤 postId가 넘어오는지 알아야한다. 
 	$('.commentBtn').on('click', function(e) {
-		// 기본 동작 중단
-		e.preventDefault();
 		
+		// 게시글 번호
 		let postId = $(this).data('post-id');
 		//alert(postId);
-		let commentText = $('#commentText').val();
-		if (commentText.length < 1) {
+		
+		// #CommentText글번호
+		let commentContent = $('#commentText' + postId).val();
+		if (commentContent.length < 1) {
 			alert("댓글을 입력해주세요.");
 			return;
 		}
 		
 		//form 태그를 자바스크립트에서 만든다.
 		let formData = new FormData();
-		formData.append('comment', comment);
+		formData.append('comment', commentContent);
+		
+	});
+	
+	
+	// 좋아요
+	$('.like-btn').on('click', function(e){
+		e.preventDefault();
+		
+		// 내가 좋아요 한 애를 가져와야함 - this!!!! .like-btn으로 뽑으면 처음애만 나옴
+		let postId = $(this).data('post-id');
+		
+		$.ajax({
+			type: 'post'
+			, url: '/like/' + postId
+			, success: function(data) {
+				if (data.result == 'success') {
+					location.reload(true); //새로고침 true안넣어도됨
+				}
+			}, error: function(e) {
+				alert("좋아요 기능 오류" + e);
+			}
+			
+		});
 		
 	});
 	

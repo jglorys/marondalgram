@@ -12,7 +12,7 @@ public class ContentView {
 	// 댓글 n개
 	private List<Comment> commentList;
 	
-	// 내가 한 좋아요
+	// 내가 한 좋아요 여부
 	private boolean likeYn; //true : 좋아요  false:좋아요 해제
 	
 	// 좋아요 총 개수
