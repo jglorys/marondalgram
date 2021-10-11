@@ -25,7 +25,7 @@ public class ContentBO {
 	@Autowired
 	private LikeBO likeBO;
 	
-	public List<ContentView> getContentViewList(int userId){
+	public List<ContentView> getContentViewList(){
 		List<ContentView> contentViewList = new ArrayList<>();
 		
 		// Post목록
@@ -42,7 +42,7 @@ public class ContentBO {
 			
 			//좋아요 - 내가 한 좋아요 여부
 			// 좋아요 -> userId, postId O-true / X-false
-			content.setLikeYn(likeBO.existLike(userId, post.getId()));
+			content.setLikeYn(likeBO.existLike(post.getUserId(), post.getId()));
 			
 			//좋아요개수
 			//좋아요 -> postId

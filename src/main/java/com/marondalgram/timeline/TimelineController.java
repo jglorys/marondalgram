@@ -32,15 +32,10 @@ public class TimelineController {
 		HttpSession session = request.getSession();
 		
 		Integer userId = (Integer) session.getAttribute("userId");// 아주작은확률로 세션이 풀려서 null일 수 있으므로 Integer
-		if (userId == null) {
-			logger.info("[timeline_view] userId is null. " + userId);
-			return "redirect:/user/sign_in_view";
-		}
-		
 		
 		// 모든 유저의 게시물들을 다 가져옴 -> parameter없음
 		// List<Post> postList = postBO.getPostList();  이거말고 List<ContentView>로 가져오자!!
-		List<ContentView> contentList = contentBO.getContentViewList(userId);
+		List<ContentView> contentList = contentBO.getContentViewList();
 
 		model.addAttribute("contentList", contentList);
 		model.addAttribute("viewName", "timeline/timeline");

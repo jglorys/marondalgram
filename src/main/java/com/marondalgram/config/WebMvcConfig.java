@@ -1,19 +1,14 @@
 package com.marondalgram.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.marondalgram.interceptor.PermissionInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 	
-	@Autowired //@Component해서 스프링 빈을 가져옴
-	private PermissionInterceptor interceptor;
-	
+	/*
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(interceptor)
@@ -22,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		// 주소들 중에서 이 주소로 들어오면 예외 처리 = 인터셉터 안태울 path설정 (로그아웃할때-로직과 반대됨 timeline-user)
 		// static 밑에 있는 모든 애들
 	}
-	
+	*/
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {

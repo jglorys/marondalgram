@@ -45,8 +45,11 @@
 
 				<%-- 글쓴이 아이디 및 ... 버튼(삭제) :  이 둘을 한 행에 멀리 떨어뜨려 나타내기 위해 d-flex, between --%>
 				<div class="p-2 d-flex justify-content-between">
-					<span class="font-weight-bold">${content.post.userName}</span>
-
+					<div>
+						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
+						<span class="font-weight-bold">${content.post.userName}</span>
+					</div>
+					
 					<%-- 클릭할 수 있는 ... 버튼 이미지 --%>
 					<%-- 로그인 된 사용자가 작성한 경우에만 버튼 노출 --%>
 					<%-- 삭제될 글번호를 modal창에 넣기 위해 더보기 클릭시 이벤트에서 심어준다 / 세션에 있는건 jsp에서 그냥 가져다쓰면됨!!!--%>
@@ -112,7 +115,7 @@
 	
 							<%-- 댓글쓴이가 본인이면 삭제버튼 노출 --%>
 							<c:if test="${userName eq comment.userName}">
-							<a href="#" class="commentDelBtn"> 
+							<a href="#" class="commentDelBtn" data-comment-id="${comment.id}"> 
 								<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10px" height="10px">
 							</a>
 							</c:if>
@@ -261,24 +264,67 @@ $(document).ready(function(){
 	
 	// 댓글 쓰기 - 어떤 postId가 넘어오는지 알아야한다. 
 	$('.commentBtn').on('click', function(e) {
-		
+		e.preventDefault(); // 기본 동작 중단
 		// 게시글 번호
 		let postId = $(this).data('post-id');
 		//alert(postId);
 		
 		// #CommentText글번호
-		let commentContent = $('#commentText' + postId).val();
+		// 글에 대한 댓글을 가져오기 위해 아이디 뒤에 동적으로 postId를 붙인다.
+		let commentContent = $('#commentText' + postId).val().trim(); // trim :앞뒤공백 제거
 		if (commentContent.length < 1) {
 			alert("댓글을 입력해주세요.");
 			return;
 		}
 		
-		//form 태그를 자바스크립트에서 만든다.
+		//form 태그를 자바스크립트에서 만든다. =======>>>> 왜오류????
 		let formData = new FormData();
-		formData.append('comment', commentContent);
+		formData.append('content', commentContent);
+		formData.append('postId', postId);
 		
+		//ajax
+		$.ajax({
+			type : 'post',
+			url : '/comment/create',
+			data : formData,
+			processData: false,	// formData전송시 필수
+			contentType: false,  // formData전송시 필수 -----여기까지가 request를 위한 설정
+			success : function(data) {
+				if (data.result == 'success') {
+					//alert("댓글 작성 완료");
+					location.reload(); //새로고침
+				}
+			},
+			error : function(e) {
+				alert("댓글작성 실패" + e);
+				location.reload(); //새로고침
+			}
+		});
 	});
 	
+	// 댓글 삭제
+	$('.commentDelBtn').on('click', function(e) {
+		e.preventDefault();
+		
+		let commentId = $(this).data("comment-id");
+		//alert(commentId);
+		
+		$.ajax({
+			type:'POST',
+			url:'/comment/delete',
+			data: {"commentId":commentId},
+			success: function(data) {
+				if (data.result == 'success') {
+					//alert("댓글이 삭제되었습니다.");
+					location.reload(); // 새로고침
+				}
+			},
+			error: function(e) {
+				alert("댓글 삭제 실패" + e);
+				location.reload();
+			}
+		});
+	});
 	
 	// 좋아요
 	$('.like-btn').on('click', function(e){
@@ -296,6 +342,7 @@ $(document).ready(function(){
 				}
 			}, error: function(e) {
 				alert("좋아요 기능 오류" + e);
+				location.reload();
 			}
 			
 		});

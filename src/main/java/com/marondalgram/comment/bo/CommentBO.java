@@ -23,4 +23,13 @@ public class CommentBO {
 		
 		return commentList;
 	}
+	
+	
+	public void createComment(int postId, int userId, String userName, String content) {
+		commentDAO.insertComment(postId, userId, userName, content);
+	}
+	
+	public void deleteComment(int commentId) {
+		commentDAO.deleteComment(commentId);
+	}
 }
