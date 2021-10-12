@@ -42,6 +42,8 @@
 			, `password`
 			, `name`
 			, `email`
+			, `introduce`
+			, `imageUrl`
 			, `createdAt`
 			, `updatedAt`
 		FROM 
@@ -50,10 +52,38 @@
 			`loginId` = #{loginId} 
 			AND `password` = #{password}
 
-
-
 	</select>
 
-
+	
+	<select id="selectUser" parameterType="int"
+		resultType="com.marondalgram.user.model.User">
+		SELECT
+			`id`
+			,`loginId`
+			, `password`
+			, `name`
+			, `email`
+			, `introduce`
+			, `imageUrl`
+			, `createdAt`
+			, `updatedAt`
+		FROM 
+			`user`
+		WHERE
+			`id` = #{id} 
+	</select>
+	
+	<update id="updateUser" parameterType="map">
+		UPDATE `user`
+		SET
+			`name` = #{name}
+			, `introduce` = #{introduce}
+			, `updatedAt` = NOW()
+			<!--  imagePath가 있을 때에만 수정한다. - 동적쿼리 작성 -->
+			<if test="imageUrl != null">, `imageUrl` = #{imageUrl}</if>
+		WHERE
+			`id` = #{id}
+			
+	</update>
 
 </mapper>

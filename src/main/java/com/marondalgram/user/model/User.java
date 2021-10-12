@@ -9,9 +9,24 @@ public class User {
 	private String password;
 	private String name;
 	private String email;
+	private String introduce;
+	private String imageUrl;
 	private Date createdAt;
 	private Date updatedAt;
+
 	
+	public String getIntroduce() {
+		return introduce;
+	}
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	public int getId() {
 		return id;
 	}

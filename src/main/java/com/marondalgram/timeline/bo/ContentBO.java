@@ -12,6 +12,7 @@ import com.marondalgram.like.bo.LikeBO;
 import com.marondalgram.post.bo.PostBO;
 import com.marondalgram.post.model.Post;
 import com.marondalgram.timeline.model.ContentView;
+import com.marondalgram.user.bo.UserBO;
 
 @Service
 public class ContentBO {
@@ -24,6 +25,9 @@ public class ContentBO {
 	
 	@Autowired
 	private LikeBO likeBO;
+	
+	@Autowired
+	private UserBO userBO;
 	
 	public List<ContentView> getContentViewList(){
 		List<ContentView> contentViewList = new ArrayList<>();
@@ -48,6 +52,8 @@ public class ContentBO {
 			//좋아요 -> postId
 			content.setLikeCount(likeBO.getLikeCountByPostId(post.getId()));
 			
+			//프로필
+			content.setUser(userBO.getUser(post.getUserId()));
 			
 			contentViewList.add(content);
 		}

@@ -3,14 +3,21 @@ package com.marondalgram.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.marondalgram.user.bo.UserBO;
+import com.marondalgram.user.model.User;
 
 @RequestMapping("/user")
 @Controller
 public class UserController {
 
+	@Autowired
+	private UserBO userBO;
+	
 	/**
 	 * 회원가입 View
 	 * @param model
@@ -43,8 +50,23 @@ public class UserController {
 		session.removeAttribute("userId");
 		session.removeAttribute("userName");
 		session.removeAttribute("userLoginId");
+		session.removeAttribute("userImage");
 		
 		// redirect : 완전히 다른 화면으로 보냄
 		return "redirect:/user/sign_in_view";
+	}
+	
+	@RequestMapping("/profile_view")
+	public String profileChangeView(
+			Model model,
+			HttpServletRequest request
+			) {
+		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute("userId");
+		User user = userBO.getUser(userId);
+		model.addAttribute("user", user);
+		model.addAttribute("viewName", "user/profile");
+		return "template/layout";
 	}
 }

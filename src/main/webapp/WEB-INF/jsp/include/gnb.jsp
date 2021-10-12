@@ -9,9 +9,10 @@
 	
 	<div class="login-info d-flex align-items-center mr-4">
 		<%-- session 정보가 있는 경우에만 출력 --%>
-		<c:if test="${not empty userId}">
-			<span class="font-weight-bold">${userName}님 안녕하세요.</span>
-			<a href="/user/sign_out" class="font-weight-bold ml-3">로그아웃</a>
+		<c:if test="${not empty userId}">	
+			<span class="font-weight-bold mr-2">${userName}님 안녕하세요.</span>
+			<a href="/user/profile_view"><button class="btn btn-secondary p-2">프로필</button></a>
+			<a href="/user/sign_out" class="font-weight-bold ml-3"><button class="btn btn-primary p-2">로그아웃</button></a>
 		</c:if>
 		<%-- session 정보 없는 경우 --%>
 		<c:if test="${empty userId}">

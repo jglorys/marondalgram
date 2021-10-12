@@ -46,7 +46,8 @@
 				<%-- 글쓴이 아이디 및 ... 버튼(삭제) :  이 둘을 한 행에 멀리 떨어뜨려 나타내기 위해 d-flex, between --%>
 				<div class="p-2 d-flex justify-content-between">
 					<div>
-						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
+						<%-- 프로필 사진 및 userName --%>
+						<img src="${content.user.imageUrl}" width="50">
 						<span class="font-weight-bold">${content.post.userName}</span>
 					</div>
 					
@@ -73,16 +74,20 @@
 					<%-- 비워진 하트 --%>
 					<c:if test="${content.likeYn eq false}">
 					<div class="card-like m-3">
-						<a href="#"  class="like-btn" data-post-id="${content.post.id}">
+						<c:if test="${not empty userId}">
+							<a href="#"  class="like-btn" data-post-id="${content.post.id}">
 							<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18px" height="18px"></a>
+						</c:if>
 							좋아요 <span>${content.likeCount}</span>
 					</div>
 					</c:if>
 					<%-- 채워진 하트 --%>
 					<c:if test="${content.likeYn eq true}">
 					<div class="card-like m-3">
-						<a href="#"  class="like-btn" data-post-id="${content.post.id}">
+						<c:if test="${not empty userId}">
+							<a href="#"  class="like-btn" data-post-id="${content.post.id}">
 							<img src="https://www.iconninja.com/files/527/809/128/heart-icon.png" width="18px" height="18px"></a>
+						</c:if>
 							좋아요 <span>${content.likeCount}</span>
 					</div>
 					</c:if>

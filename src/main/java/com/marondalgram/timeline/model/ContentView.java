@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.marondalgram.comment.model.Comment;
 import com.marondalgram.post.model.Post;
+import com.marondalgram.user.model.User;
 
 public class ContentView {
 	// 글 1개
@@ -17,6 +18,17 @@ public class ContentView {
 	
 	// 좋아요 총 개수
 	private int likeCount;
+	
+	//프로필 띄우기 위한 user객체
+	private User user;
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public Post getPost() {
 		return post;
